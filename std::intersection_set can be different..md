@@ -1,3 +1,8 @@
+---
+
+
+---
+
 <h1 id="stdset_intersection_set-is-not-general-enough.">std::set_intersection_set is not general enough.</h1>
 <p>I think that the STL library algorithms should be as generic as possible. In other words, these algorithms should be the basic blocks of other more sophisticated algorithms. I will talk about std::intersection_set.  My argument is that it is not general enough. To make it more general, however, we may end up with an interface that is hard to use.</p>
 <p>As understood from its name, std::intersection_set finds the intersection of two ranges. It assumes that the two ranges are sorted. Let’s start with an example of how to use std::intersection_set.</p>
