@@ -1,17 +1,6 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>std::intersection_set can be different.</title>
-  <link rel="stylesheet" href="https://stackedit.io/style.css" />
-</head>
-
-<body class="stackedit">
-  <div class="stackedit__html"><h1 id="stdset_intersection_set-is-not-general-enough.">std::set_intersection_set is not general enough.</h1>
-<p>I think that the the STL library algorithms should be as generic as possible. In other words, these algorithms should be the basic blocks of other more sophisticated algorithms. I will talk about std::intersection_set.  My argument is that it is not general enough. To make it more general, however, we may end up with an interface that it hard to use.</p>
-<p>As understood from its name, std::intersection_set finds the interesction of two ranges. It assumes that the two ranges are sorted. Let’s start with an example of how to use std::intersection_set.</p>
+<h1 id="stdset_intersection_set-is-not-general-enough.">std::set_intersection_set is not general enough.</h1>
+<p>I think that the STL library algorithms should be as generic as possible. In other words, these algorithms should be the basic blocks of other more sophisticated algorithms. I will talk about std::intersection_set.  My argument is that it is not general enough. To make it more general, however, we may end up with an interface that is hard to use.</p>
+<p>As understood from its name, std::intersection_set finds the intersection of two ranges. It assumes that the two ranges are sorted. Let’s start with an example of how to use std::intersection_set.</p>
 <pre class=" language-cpp"><code class="prism  language-cpp">std<span class="token operator">::</span>vector<span class="token operator">&lt;</span><span class="token keyword">int</span><span class="token operator">&gt;</span> A<span class="token punctuation">{</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">5</span><span class="token punctuation">,</span><span class="token number">7</span><span class="token punctuation">}</span><span class="token punctuation">;</span> 
 std<span class="token operator">::</span>vector<span class="token operator">&lt;</span><span class="token keyword">int</span><span class="token operator">&gt;</span> B<span class="token punctuation">{</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">4</span><span class="token punctuation">,</span><span class="token number">5</span><span class="token punctuation">}</span><span class="token punctuation">;</span> 
 std<span class="token operator">::</span>vector<span class="token operator">&lt;</span><span class="token keyword">int</span><span class="token operator">&gt;</span> C<span class="token punctuation">;</span> 
@@ -55,7 +44,7 @@ std<span class="token operator">::</span>cout <span class="token operator">&lt;&
   <span class="token keyword">bool</span> <span class="token keyword">operator</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token keyword">int</span> a<span class="token punctuation">,</span> S s<span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token keyword">return</span> a <span class="token operator">&lt;</span> s<span class="token punctuation">.</span>a<span class="token punctuation">;</span> <span class="token punctuation">}</span> 
 <span class="token punctuation">}</span><span class="token punctuation">;</span>
 </code></pre>
-<p>I will show you how std::set_intersection is implemented (one way of doing  that of course) to understand what is happening (I will be using operator&lt; instead of cmp here).</p>
+<p>I will show you how std::set_intersection is implemented (one way of doing that of course) to understand what is happening (I will be using operator&lt; instead of cmp here).</p>
 <pre class=" language-cpp"><code class="prism  language-cpp"><span class="token keyword">namespace</span> my 
 <span class="token punctuation">{</span> 
   <span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">typename</span> Iterator1<span class="token punctuation">,</span> <span class="token keyword">typename</span> Iterator2<span class="token punctuation">,</span> <span class="token keyword">typename</span> OutIterator<span class="token operator">&gt;</span> 
@@ -75,7 +64,7 @@ std<span class="token operator">::</span>cout <span class="token operator">&lt;&
 <span class="token punctuation">}</span> 
 </code></pre>
 <p>Note that there are <code>*first1 &lt; *first2</code>, and then <code>*first2 &lt; *first1</code>.  We are dealing with two different operator&lt; functions here.  (<em>Side note:</em> We intentionally don’t use <code>*first1 == *first2</code>. Why? if the data comes from one type, then we will need to define operator&lt; only, instead of operator&lt; and the equality operator.)</p>
-<p>The other thing that I want you to look at is the assignment at the else-statment (i.e., <code>*out_it++ = *first1++; first2++;</code>) .  I actually think that this is a weakness in <em>std::intersection_set</em>. Why shouldn’t we take the *first2 instead? Why don’t the standard let us decide which one to use? Maybe we will want to combine *first1 and *first2.   Something like this:</p>
+<p>The other thing that I want you to look at is the assignment at the else-statement (i.e., <code>*out_it++ = *first1++; first2++;</code>).  I think that this is a weakness in <em>std::intersection_set</em>. Why shouldn’t we take the *first2 instead? Why don’t the standard let us decide which one to use? Maybe we will want to combine *first1 and *first2.   Something like this:</p>
 <pre class=" language-cpp"><code class="prism  language-cpp"><span class="token keyword">namespace</span> my 
 <span class="token punctuation">{</span>
    <span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">typename</span> Iterator1<span class="token punctuation">,</span> <span class="token keyword">typename</span> Iterator2<span class="token punctuation">,</span> <span class="token keyword">typename</span> OutIterator<span class="token punctuation">,</span> <span class="token keyword">typename</span> Comparator<span class="token punctuation">,</span> 
@@ -124,8 +113,5 @@ my<span class="token operator">::</span><span class="token function">set_interse
 std<span class="token operator">::</span>cout <span class="token operator">&lt;&lt;</span> <span class="token string">"C: "</span><span class="token punctuation">;</span>  <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">auto</span> c<span class="token operator">:</span> C<span class="token punctuation">)</span> <span class="token punctuation">{</span> std<span class="token operator">::</span>cout <span class="token operator">&lt;&lt;</span> c <span class="token operator">&lt;&lt;</span> <span class="token string">' '</span><span class="token punctuation">;</span> <span class="token punctuation">}</span> std<span class="token operator">::</span>cout <span class="token operator">&lt;&lt;</span> <span class="token string">'\n'</span><span class="token punctuation">;</span> 
 <span class="token comment">// This prints: C: int(2)-S(2) int(5)-S(5)</span>
 </code></pre>
-<p>I see some applications for this combinantor as in matching. Like you have two sets of S’s and M’s each with unique identifier. We would like to match the elements with the same ID’s in the output. We may also want to run some function on these output pairs.  I am not sure how serious these applications  are, so I will just skip them for now.</p>
-</div>
-</body>
+<p>I see some applications for this combinator as in matching. Like you have two sets of S’s and M’s each with a unique identifier. We would like to match the elements with the same ID in the output. We may also want to run some function on these output pairs.  I am not sure how serious these applications are, so I will just skip them for now.</p>
 
-</html>
