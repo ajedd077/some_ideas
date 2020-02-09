@@ -1,9 +1,15 @@
----
+<!DOCTYPE html>
+<html>
 
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>std::intersection_set can be different.</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
 
----
-
-<h1 id="stdset_intersection_set-is-not-general-enough.">std::set_intersection_set is not general enough.</h1>
+<body class="stackedit">
+  <div class="stackedit__html"><h1 id="stdset_intersection_set-is-not-general-enough.">std::set_intersection_set is not general enough.</h1>
 <p>I think that the STL library algorithms should be as generic as possible. In other words, these algorithms should be the basic blocks of other more sophisticated algorithms. I will talk about std::intersection_set.  My argument is that it is not general enough. To make it more general, however, we may end up with an interface that is hard to use.</p>
 <p>As understood from its name, std::intersection_set finds the intersection of two ranges. It assumes that the two ranges are sorted. Let’s start with an example of how to use std::intersection_set.</p>
 <pre class=" language-cpp"><code class="prism  language-cpp">std<span class="token operator">::</span>vector<span class="token operator">&lt;</span><span class="token keyword">int</span><span class="token operator">&gt;</span> A<span class="token punctuation">{</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">5</span><span class="token punctuation">,</span><span class="token number">7</span><span class="token punctuation">}</span><span class="token punctuation">;</span> 
@@ -119,4 +125,7 @@ std<span class="token operator">::</span>cout <span class="token operator">&lt;&
 <span class="token comment">// This prints: C: int(2)-S(2) int(5)-S(5)</span>
 </code></pre>
 <p>I see some applications for this combinator as in matching. Like you have two sets of S’s and M’s each with a unique identifier. We would like to match the elements with the same ID in the output. We may also want to run some function on these output pairs.  I am not sure how serious these applications are, so I will just skip them for now.</p>
+</div>
+</body>
 
+</html>
